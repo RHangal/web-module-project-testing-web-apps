@@ -114,6 +114,35 @@ test('renders all firstName, lastName and email text when submitted. Does NOT re
 
 });
 
-// test('renders all fields text when all fields are submitted.', async () => {
+test('renders all fields text when all fields are submitted.', async () => {
+    render(<ContactForm/>);
 
-// });
+    //submitting valid input and leaving "message" field blank
+    const firstNameField = screen.getByLabelText(/First Name*/i);
+    userEvent.type(firstNameField, 'Johnathan');
+
+    const lastNameField = screen.getByLabelText(/Last Name*/i);
+    userEvent.type(lastNameField, 'Smithington');
+
+    const emailField = screen.getByLabelText(/email*/i);
+    userEvent.type(emailField, 'roroyourboat@gmail.com')
+
+    const messageField = screen.getByLabelText(/message/i);
+    userEvent.type(messageField, 'Foo Bar')
+
+    const submitButton = screen.getByRole("button")
+    userEvent.click(submitButton);
+
+    //searching for the displayed results and a blank message value
+    const firstNameDisplay = await screen.findByTestId("firstnameDisplay");
+    expect(firstNameDisplay).toHaveTextContent(/johnathan/i);
+
+    const lastNameDisplay = await screen.findByTestId("lastnameDisplay");
+    expect(lastNameDisplay).toHaveTextContent(/smithington/i);
+
+    const emailDisplay = await screen.findByTestId("emailDisplay");
+    expect(emailDisplay).toHaveTextContent(/roroyourboat@gmail.com/i);
+
+    const messageDisplay = await screen.findByTestId("messageDisplay");
+    expect(messageDisplay).toHaveTextContent(/foo bar/i);
+});
